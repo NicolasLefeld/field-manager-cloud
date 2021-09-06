@@ -11,6 +11,7 @@ const { createSign } = require("crypto");
 const { EOL } = require("os");
 
 function encodeData(data, privateKey64, { nombre }, { desde, hasta }) {
+  let key = "";
   const dataParsed = {
     device_id: data.device_id,
     client_name: nombre,
@@ -20,16 +21,17 @@ function encodeData(data, privateKey64, { nombre }, { desde, hasta }) {
     start_date: desde,
   };
   const dataStringified = JSON.stringify(dataParsed);
-
-  let key = "";
-
   const sign = createSign("RSA-SHA256");
+
   sign.update("dataStringified");
   sign.end();
+
   const signature = sign.sign(
     `${PRIVATE_KEY_BEGIN}${EOL}${privateKey64}${EOL}${PRIVATE_KEY_END}`
   );
-  const signatureString = Buffer.from(signature).toString("base64").toString('ascii');
+  const signatureString = Buffer.from(signature)
+    .toString("base64")
+    .toString("ascii");
   const signatureStringLength = signatureString.length;
 
   for (let i = 0; i < signatureStringLength; i = i + SIGNATURE_LINE_LENGTH) {
@@ -43,8 +45,7 @@ function encodeData(data, privateKey64, { nombre }, { desde, hasta }) {
     }
   }
 
-  const result = `${LICENSE_BEGIN}${EOL}${dataStringified}${EOL}${EOL}${LICENSE_END}${EOL}${SIGNATURE_BEGIN}${EOL}${key}${EOL}${SIGNATURE_END}`;
-  return result;
+  return `${LICENSE_BEGIN}${EOL}${dataStringified}${EOL}${EOL}${LICENSE_END}${EOL}${SIGNATURE_BEGIN}${EOL}${key}${EOL}${SIGNATURE_END}`;
 }
 
 module.exports = {
