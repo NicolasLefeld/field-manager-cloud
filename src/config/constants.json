@@ -12,5 +12,7 @@
   "LICENSE_BEGIN": "----- BEGIN LICENSE -----",
   "LICENSE_END": "----- END LICENSE -----",
   "SIGNATURE_BEGIN": "----- BEGIN SIGNATURE -----",
-  "SIGNATURE_END": "----- END SIGNATURE -----"
+  "SIGNATURE_END": "----- END SIGNATURE -----",
+  "PRIVATE_KEY_BEGIN": "-----BEGIN PRIVATE KEY-----",
+  "PRIVATE_KEY_END": "-----END PRIVATE KEY-----"
 }
