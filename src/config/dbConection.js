@@ -11,7 +11,7 @@ async function query(query) {
       connectionLimit: 5,
       database: DATABASE,
     });
-    
+
     db = await pool.getConnection();
 
     const rows = await db.query(query);
@@ -22,6 +22,26 @@ async function query(query) {
   }
 }
 
+async function tryConnection() {
+  const pool = await mariadb.createPool({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PWD,
+    connectionLimit: 5,
+    database: DATABASE,
+  });
+
+  try {
+    console.log("🦭  Trying to connect to MariaDB 🦭");
+    await pool.getConnection();
+    pool.end();
+    console.log("🦭  MariaDB connection ready 🦭");
+  } catch (err) {
+    console.log("💥  Could not connect to MariaDB 💥");
+  }
+}
+
 module.exports = {
   query,
+  tryConnection,
 };

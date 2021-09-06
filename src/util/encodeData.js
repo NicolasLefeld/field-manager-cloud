@@ -1,8 +1,13 @@
-const { Result } = require("express-validator");
+const {
+  SIGNATURE_LINE_LENGTH,
+  LICENSE_BEGIN,
+  LICENSE_END,
+  SIGNATURE_BEGIN,
+  SIGNATURE_END
+} = require("../config/constants.json");
+const { EOL } = require("os");
 
 function encodeData(data, privateKey64, { nombre }, { desde, hasta }) {
-  // MIIBSgIBADCCASsGByqGSM44BAEwggEeAoGBALxwvVh6pmpQXIoiZPzgauZCHSmMTQ2MnhrikcFRS7SbjRrEAE721BtnA8dOBc+RmmAMbGyeV9YVgAbitDjkIZdB35tFufZh6CsZHoWCeaHV/5oSzbb1aE0DYx95Y82rEVRiCWAB04EmtJz9s9ShCrf5uxKZTuafof8YYigAE5MjAhUAiV56JT7C0yVUsmZ8dakcebP0JPUCgYA2mVbOLANDeDrx9kURFLBF8USBgesLRfXgXkSiViw/xZvu4GKOoCrDp5M5ay1p2bBK4PvEEjDlmjFC7XcoKjUb6FBK2Ou9uYUwmWDiBaEZOQRmcqtVwFcen3OoLv5bl7zeBPlBjBTHvi4kxraoDgqOjIFkCDkSPwkXS18XUowNyQQWAhRNWTakVHLGu1pV2yrg8oaLHHvWJw==
-  const key = privateKey64;
   const dataParsed = {
     device_id: data.device_id,
     client_name: nombre,
@@ -12,8 +17,22 @@ function encodeData(data, privateKey64, { nombre }, { desde, hasta }) {
     start_date: desde,
   };
   const dataStringified = JSON.stringify(dataParsed);
+  const signatureString = privateKey64;
+  const signatureStringLength = signatureString.length;
+  let key;
 
-  const result = `----- BEGIN LICENSE -----\n${dataStringified}\n\n----- END LICENSE -----\n----- BEGIN SIGNATURE -----\n${key}\n----- END SIGNATURE -----`;
+  for (let i = 0; i < signatureStringLength; i = i + SIGNATURE_LINE_LENGTH) {
+    key += signatureString.substr(
+      i,
+      Math.min(signatureStringLength - i, SIGNATURE_LINE_LENGTH)
+    );
+
+    if (signatureStringLength - i > SIGNATURE_LINE_LENGTH) {
+      key += EOL;
+    }
+  }
+
+  const result = `${LICENSE_BEGIN}${EOL}${dataStringified}${EOL}${LICENSE_END}${EOL}${SIGNATURE_BEGIN}${EOL}${key}${EOL}${SIGNATURE_END}`;
   return result;
 }
 
