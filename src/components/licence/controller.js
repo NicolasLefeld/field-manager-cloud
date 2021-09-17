@@ -38,9 +38,9 @@ async function activate(ip, { command, data }) {
         const [periods] = await getPeriods(licence.id, today);
 
         if (periods) {
-          console.log(periods);
           periods.desde = periods.desde.toISOString().substr(0,10)
           periods.hasta = periods.hasta.toISOString().substr(0,10)
+          
           const [lastActivation] = await getLastActivacion(licence.id);
 
           if (lastActivation && deviceDbInfo.hadwareId === dataParsed.device_id) {
