@@ -7,7 +7,13 @@ const {
 } = require("firebase/auth");
 
 const firebaseConfig = {
-  apiKey: "API_KEY",
+  apiKey: 'AIzaSyA6LxMvq9LxSK98GcFOgGFmtBj_qxyjrNo',
+  authDomain: 'fieldmanagerapp.firebaseapp.com',
+  projectId: 'fieldmanagerapp',
+  storageBucket: 'fieldmanagerapp.appspot.com',
+  messagingSenderId: '625593883192',
+  appId: '1:625593883192:web:76f73570d26219aeffa4cd',
+  measurementId: 'G-64R9TRVEHC',
 };
 
 initializeApp(firebaseConfig);
