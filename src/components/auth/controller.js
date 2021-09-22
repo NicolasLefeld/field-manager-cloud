@@ -34,7 +34,7 @@ const userAndPasswordCreate = async (email, password) => {
   } catch (error) {
     return {
       status: error.code,
-      body: error.message,
+      body: 'Error while creating the user',
     };
   }
 };
@@ -51,7 +51,7 @@ const userAndPasswordLogin = async (email, password) => {
   } catch (error) {
     return {
       status: error.code,
-      body: error.message,
+      body: 'Error while login',
     };
   }
 };
@@ -70,7 +70,7 @@ const googleLogin = async () => {
   } catch (error) {
     return {
       status: error.code,
-      body: error.message,
+      body: 'Error while login',
     };
   }
 };
