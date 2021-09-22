@@ -21,7 +21,7 @@ router.post("/signup", async (req, res) => {
 
     res.status(200).json(rs);
   } catch (error) {
-    res.status(500).body("Error while creating the user");
+    res.status(500).json("Error while creating the user");
   }
 });
 
@@ -33,7 +33,7 @@ router.post("/signin", async (req, res) => {
 
     res.status(200).json(rs);
   } catch (error) {
-    res.status(500).body("Error while login");
+    res.status(500).json("Error while login");
   }
 });
 
@@ -43,7 +43,7 @@ router.post("/google/signup", async (req, res) => {
 
     res.status(200).json(rs);
   } catch (error) {
-    res.status(500).body("Error while login");
+    res.status(500).json("Error while login");
   }
 });
 
