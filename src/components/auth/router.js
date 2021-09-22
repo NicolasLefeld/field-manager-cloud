@@ -14,25 +14,37 @@ router.use(function (req, res, next) {
 });
 
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const { status, body } = await userAndPasswordCreate(email, password);
+    const rs = await userAndPasswordCreate(email, password);
 
-  res.status(status).json(body);
+    res.status(200).json(rs);
+  } catch (error) {
+    res.status(500).body("Error while creating the user");
+  }
 });
 
 router.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const { status, body } = await userAndPasswordLogin(email, password);
+    const rs = await userAndPasswordLogin(email, password);
 
-  res.status(status).json(body);
+    res.status(200).json(rs);
+  } catch (error) {
+    res.status(500).body("Error while login");
+  }
 });
 
 router.post("/google/signup", async (req, res) => {
-  const { status, body } = await googleLogin();
+  try {
+    const rs = await googleLogin();
 
-  res.status(status).json(body);
+    res.status(200).json(rs);
+  } catch (error) {
+    res.status(500).body("Error while login");
+  }
 });
 
 module.exports = router;

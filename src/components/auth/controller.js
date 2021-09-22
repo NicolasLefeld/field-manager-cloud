@@ -19,60 +19,36 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const userAndPasswordCreate = async (email, password) => {
-  try {
-    const auth = await getAuth();
-    const { userCredential } = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+  const auth = await getAuth();
+  const { userCredential } = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
 
-    return {
-      status: 200,
-      body: userCredential,
-    };
-  } catch (error) {
-    return {
-      status: error.code,
-      body: 'Error while creating the user',
-    };
-  }
+  return userCredential;
 };
 
 const userAndPasswordLogin = async (email, password) => {
-  try {
-    const auth = getAuth();
-    const logedIn = await signInWithEmailAndPassword(auth, email, password);
+  const auth = getAuth();
+  const logedIn = await signInWithEmailAndPassword(auth, email, password);
 
-    return {
-      status: 200,
-      body: logedIn,
-    };
-  } catch (error) {
-    return {
-      status: error.code,
-      body: 'Error while login',
-    };
-  }
+  return {
+    status: 200,
+    body: logedIn,
+  };
 };
 
 const googleLogin = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
+  const provider = new GoogleAuthProvider();
 
-    const auth = getAuth();
-    const result = await signInWithPopup(auth, provider);
+  const auth = getAuth();
+  const result = await signInWithPopup(auth, provider);
 
-    return {
-      status: 200,
-      body: result.user,
-    };
-  } catch (error) {
-    return {
-      status: error.code,
-      body: 'Error while login',
-    };
-  }
+  return {
+    status: 200,
+    body: result.user,
+  };
 };
 
 module.exports = {
