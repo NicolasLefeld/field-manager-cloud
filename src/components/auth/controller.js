@@ -5,6 +5,9 @@ const {
   signInWithEmailAndPassword,
   signInWithPopup,
 } = require("firebase/auth");
+const {
+  getUsuario,
+} = require("./request");
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6LxMvq9LxSK98GcFOgGFmtBj_qxyjrNo",
@@ -39,16 +42,11 @@ const userAndPasswordLogin = async (email, password) => {
   };
 };
 
-const googleLogin = async () => {
-  const provider = new GoogleAuthProvider();
+const googleLogin = async (email) => {
+  const [result] = await getUsuario(email);
 
-  const auth = getAuth();
-  const result = await signInWithPopup(auth, provider);
-
-  return {
-    status: 200,
-    body: result.user,
-  };
+  if (result) return 200;
+  return 401;
 };
 
 module.exports = {

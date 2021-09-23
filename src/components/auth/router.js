@@ -37,14 +37,12 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/google/signup", async (req, res) => {
-  try {
-    const rs = await googleLogin();
+router.post("/google/signin", async (req, res) => {
+  const { email } = req.body;
 
-    res.status(200).json(rs);
-  } catch (error) {
-    res.status(500).json("Error while login");
-  }
+  const status = await googleLogin(email);
+
+  res.status(status);
 });
 
 module.exports = router;
