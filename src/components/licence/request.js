@@ -60,10 +60,28 @@ async function getLastActivacion(licence_id) {
   }
 }
 
+async function persist(obj) {
+  const columns = Object.keys(obj).toString();
+  const values = Object.entries(activation)
+    .map((a) => a[1])
+    .toString();
+  try {
+    return await query(
+      `INSERT INTO Activacion
+      (${columns})
+      VALUES
+      (${values})`
+    );
+  } catch (error) {
+    console.log("Error db", error);
+  }
+}
+
 module.exports = {
   getDevice,
   getClient,
   getLicence,
   getPeriods,
   getLastActivacion,
+  persist,
 };

@@ -4,6 +4,7 @@ const {
   getLicence,
   getPeriods,
   getLastActivacion,
+  persist
 } = require("./request");
 const {
   LICENCE_RESPONSE_UNKNOWN,
@@ -11,9 +12,12 @@ const {
   LICENCE_RESPONSE_EXPIRED,
   LICENCE_RESPONSE_INVALID_LICENCE,
   LICENCE_RESPONSE_INVALID_CLIENT,
-  LICENCE_RESPONSE_ACTIVATED
+  LICENCE_RESPONSE_ACTIVATED,
+  ACTIVATED_ACTIVADO,
+  ACTIVATED_ERROR
 } = require("../../config/constants.json");
 const { encodeData } = require("../../util/encodeData");
+const { date } = require("joi");
 
 async function activate(ip, { command, data }) {
   let status = 200,
@@ -26,6 +30,13 @@ async function activate(ip, { command, data }) {
 
     const [deviceDbInfo] = await getDevice(dataParsed.device_id);
 
+    let activation = {
+      cuando: today,
+      actived: ACTIVATED_ERROR,
+      ip,
+      dispositivo: deviceDbInfo
+    }
+
     const [client] = await getClient(dataParsed.client_number);
 
     if (client) {
@@ -35,6 +46,8 @@ async function activate(ip, { command, data }) {
       );
 
       if (licence) {
+        activation.licencia = licence;
+
         const [periods] = await getPeriods(licence.id, today);
 
         if (periods) {
@@ -49,6 +62,8 @@ async function activate(ip, { command, data }) {
             body.respuesta = LICENCE_RESPONSE_ACTIVATED;
             body.userMessage = "TestLic";
             body.jsonLicCryp = [encodedData];
+
+            activation.actived = ACTIVATED_ACTIVADO;
           } else {
             body.respuesta = LICENCE_RESPONSE_WRONG_HARDWARE;
           }
@@ -66,6 +81,9 @@ async function activate(ip, { command, data }) {
   } else {
     body.respuesta = "wrong seed";
   }
+
+  await persist(activation);
+
   return { status, body };
 }
 
